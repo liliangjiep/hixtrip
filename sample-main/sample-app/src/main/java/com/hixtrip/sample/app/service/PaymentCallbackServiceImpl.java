@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author : 貔貅
+ * @Author : 李良杰
  * @Description :付回调服务，根据具体的支付回调策略来处理支付回调通知。
  * @Date : 2024/4/17 23:59
  * version :1.0
@@ -18,13 +18,14 @@ import org.springframework.stereotype.Component;
 public class PaymentCallbackServiceImpl implements PaymentCallbackService {
     @Autowired
     private PaymentCallbackDomainService paymentCallbackDomainService;
+
     /**
-     * /**
+     *
      * 处理支付回调通知
      *
      * @param commandPayDTO 支付回调通知的入参对象
      * @return 处理结果，通常为一个字符串表示处理结果或状态
-     * @Author: 貔貅
+     * @Author: 李良杰
      * @Date：2024/4/17 23:59
      */
     @Override

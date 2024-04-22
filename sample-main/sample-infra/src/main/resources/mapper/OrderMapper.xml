@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hixtrip.sample.infra.db.mapper.OrderMapper">
+    <!--mapper xml-->
+    <!-- 查询订单 -->
+    <select id="selectOrderById" resultType="com.hixtrip.sample.infra.db.dataobject.OrderDO">
+        SELECT * FROM `order` WHERE id = #{id}
+    </select>
+
+    <!-- 插入订单 -->
+    <insert id="insertOrder" parameterType="com.hixtrip.sample.infra.db.dataobject.OrderDO">
+        INSERT INTO `order` (id, user_id, sku_id, amount, money, create_time, update_time)
+        VALUES (#{id}, #{userId}, #{skuId}, #{amount}, #{money}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新订单支付状态为 -->
+    <update id="updatePayStatus" parameterType="map">
+        <!-- 根据订单号更新支付状态 -->
+        UPDATE order
+        SET pay_status = #{payStatus, jdbcType=VARCHAR}
+        update_time = #{updateTime, jdbcType=TIMESTAMP},
+        update_by = #{updateBy, jdbcType=VARCHAR}
+        WHERE
+        id = #{orderId}
+        AND delFlag = 1
+    </update>
+</mapper>

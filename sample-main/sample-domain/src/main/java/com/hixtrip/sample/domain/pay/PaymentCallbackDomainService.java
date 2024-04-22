@@ -1,29 +1,33 @@
-package com.hixtrip.sample.domain.pay.strategy;
+package com.hixtrip.sample.domain.pay;
 
 import com.hixtrip.sample.domain.pay.model.CommandPay;
+import com.hixtrip.sample.domain.pay.strategy.PayCallbackStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * @Author : 貔貅
- * @Description :
+ * @Author : 李良杰
+ * @Description :支付回调执行器类，用于根据支付状态执行对应的支付回调策略。
  * @Date : 2024/4/18 10:09
  * version :1.0
  **/
 @Component
 public class PaymentCallbackDomainService {
+
     @Autowired
-    private Map<String, PayCallbackStrategy> strategyMap;
+    private List<PayCallbackStrategy> strategyList;
 
     public void executeStrategy(String paymentStatus, CommandPay commandPay) {
-        PayCallbackStrategy strategy = strategyMap.get(paymentStatus);
-        if (strategy != null) {
-            strategy.handlePayCallback(commandPay);
-        } else {
-            // 没有匹配的策略
-            throw new UnsupportedOperationException("Unsupported payment status: " + paymentStatus);
+        for (PayCallbackStrategy strategy : strategyList) {
+            if (strategy.supports(paymentStatus)) {
+                strategy.handlePayCallback(commandPay);
+                return;
+            }
         }
+        // 没有匹配的策略
+        throw new UnsupportedOperationException("Unsupported payment status: " + paymentStatus);
     }
+
 }

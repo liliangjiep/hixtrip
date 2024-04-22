@@ -12,5 +12,5 @@ public interface OrderConvertor {
 
     OrderConvertor INSTANCE = Mappers.getMapper(OrderConvertor.class);
 
-
+    //Order buildOrder(CommandOderCreateDTO commandOderCreateDTO);
 }
