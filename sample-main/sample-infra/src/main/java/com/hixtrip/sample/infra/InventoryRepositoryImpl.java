@@ -22,17 +22,22 @@ public class InventoryRepositoryImpl implements InventoryRepository {
 
     @Override
     public Inventory getInventory(String skuId) {
-        //获取指定 skuId 的商品库存信息的哈希结构映
-        Map<Object, Object> inventoryMap = redisTemplate.opsForHash().entries("inventory:" + skuId);
-        if (inventoryMap == null || inventoryMap.isEmpty()) {
-            return new Inventory(); // 或者返回一个新的Inventory对象，其字段为默认值
+        try {
+            // 获取指定 skuId 的商品库存信息的哈希结构映射
+            Map<Object, Object> inventoryMap = redisTemplate.opsForHash().entries("inventory:" + skuId);
+            if (inventoryMap == null || inventoryMap.isEmpty()) {
+                return new Inventory(); // 或者返回一个新的Inventory对象，其字段为默认值
+            }
+            Inventory inventory = new Inventory();
+            inventory.setSkuId(skuId);
+            inventory.setSellableQuantity((Long) inventoryMap.getOrDefault("sellableQuantity", 0L));
+            inventory.setWithholdingQuantity((Long) inventoryMap.getOrDefault("withholdingQuantity", 0L));
+            inventory.setOccupiedQuantity((Long) inventoryMap.getOrDefault("occupiedQuantity", 0L));
+            return inventory;
+        } catch (Exception e) {
+            e.printStackTrace(); // 可以记录日志或者其他处理
+            return new Inventory(); // 或者抛出自定义异常，或者返回一个新的Inventory对象，其字段为默认值
         }
-        Inventory inventory = new Inventory();
-        inventory.setSkuId(skuId);
-        inventory.setSellableQuantity((Long) inventoryMap.get("sellableQuantity"));
-        inventory.setWithholdingQuantity((Long) inventoryMap.get("withholdingQuantity"));
-        inventory.setOccupiedQuantity((Long) inventoryMap.get("occupiedQuantity"));
-        return inventory;
     }
 
     @Override
